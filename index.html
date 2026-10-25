@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10191c">
+  <meta name="description" content="Интерактивная карта Stalker Strike. Локации, базы и аномалии игрового сектора.">
+  <title>STALKER STRIKE — Карта Зоны</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./places.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-base" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10H3Z M9 20v-7h6v7"/></symbol>
+    <symbol id="i-bar" viewBox="0 0 24 24"><path d="M5 3h14l-1 10H6L5 3Zm7 10v8m-5 0h10M5 7h14"/></symbol>
+    <symbol id="i-warehouse" viewBox="0 0 24 24"><path d="M3 21V8l9-5 9 5v13H3Zm4 0V11h10v10M7 15h10M7 18h10"/></symbol>
+    <symbol id="i-camp" viewBox="0 0 24 24"><path d="m2 20 10-16 10 16H2Zm6 0 4-8 4 8M12 4V1"/></symbol>
+    <symbol id="i-ruins" viewBox="0 0 24 24"><path d="M4 21V8h5V3h6v7h5v11H4Zm5-8v3m6-2v4M2 21h20"/></symbol>
+    <symbol id="i-anomaly" viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 10-13h-8l1-7Z"/></symbol>
+    <symbol id="i-cross" viewBox="0 0 24 24"><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/><circle cx="12" cy="12" r="6"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m2 8 10-5 10 5-10 5L2 8Zm0 5 10 5 10-5M2 18l10 5 10-5"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  </defs></svg>
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="./" aria-label="Stalker Strike — главная"><span class="brand-mark">S<span>/</span>S</span><span class="brand-name">STALKER<span>STRIKE<span class="brand-dot">®</span></span></span></a>
+    <div class="network"><span class="status-dot"></span> ПОЛЕВАЯ СЕТЬ <span class="network-id">SS–01</span></div>
+    <div class="side-heading"><span class="eyebrow">НАВИГАЦИЯ</span><span class="tiny-code">[ 01 ]</span></div>
+    <button class="nav-current" id="overview"><svg><use href="#i-layers"/></svg>Карта Зоны<span>↗</span></button>
+    <div class="side-heading locations-heading"><span class="eyebrow">ОБЪЕКТЫ СЕКТОРА</span><span class="count" id="location-count">05</span></div>
+    <label class="search"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg><input id="search" placeholder="Найти локацию…" aria-label="Поиск локаций" autocomplete="off"><span>/</span></label>
+    <div class="place-list" id="place-list"></div>
+    <div class="side-bottom"><div class="note-label"><span class="orange-square"></span> ПОЛЕВАЯ ЗАМЕТКА</div><p>У каждой дороги есть конец.<br>У Зоны — свои планы.</p><div class="draft-note">Размещение игровых точек — эскиз.</div><div class="side-version"><span>STALKER STRIKE</span><span>MAP SYSTEM / 01</span></div></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><button class="mobile-menu" id="menu-toggle" aria-label="Открыть список локаций" aria-expanded="false">☰</button><div class="breadcrumb">ПОЛЕВОЙ ТЕРМИНАЛ <span>/</span> ИНТЕРАКТИВНАЯ КАРТА</div><div class="top-status"><span class="status-dot"></span> СИГНАЛ УСТОЙЧИВ</div><span class="terminal-time" id="terminal-time">--:--:--</span></header>
+    <section class="map-heading"><div><div class="eyebrow map-eyebrow"><span class="orange-square"></span> ТЕРРИТОРИЯ ИГРЫ / СХЕМА ОБЪЕКТОВ</div><h1><span class="glitch-text" data-text="КАРТА ЗОНЫ" aria-label="КАРТА ЗОНЫ"><span aria-hidden="true">КАРТА ЗОНЫ</span></span><span class="sector-tag">СЕКТОР 01</span></h1></div><div class="heading-note">ЗНАЙ МЕСТНОСТЬ.<br><span>ВЫБИРАЙ СВОЙ ПУТЬ.</span></div></section>
+    <section class="map-shell" aria-label="Интерактивная карта">
+      <div class="map-toolbar"><div class="map-mode-switch" role="group" aria-label="Режим карты"><button id="mode-color" class="mode-button" aria-pressed="false">Цветная</button><button id="mode-scanner" class="mode-button active" aria-pressed="true">Сканер</button></div><div class="layer-controls"><button id="locations-toggle" class="layer active" aria-pressed="true"><span class="legend-dot location-dot"></span>Локации <span>05</span></button><button id="anomalies-toggle" class="layer active" aria-pressed="true"><span class="legend-dot anomaly-dot"></span>Аномалии <span>05</span></button><span class="toolbar-divider"></span><button id="effects-toggle" class="effects-control" aria-pressed="true" title="Отключить эффекты экрана"><span class="toggle-track"><span></span></span><span>ЭФФЕКТЫ</span></button></div></div>
+      <div class="map-viewport" id="map-viewport" tabindex="0" aria-label="Карта. Масштаб: плюс и минус; перемещение: стрелки; сброс: 0; закрыть карточку: Escape">
+        <div class="map-plane" id="map-plane"><img class="map-image" id="map-image" src="./assets/zone-blueprint.png" alt="Синий план игрового сектора: дороги, здания, лес и разрушенные корпуса" width="1457" height="1080" draggable="false"><img class="map-image map-image-color" id="map-image-color" src="./assets/zone-color.png" alt="Цветная карта игрового сектора без выделенных дорог" width="1457" height="1080" draggable="false" aria-hidden="true"><div class="map-markers" id="map-markers"></div></div>
+        <div class="screen-fx" aria-hidden="true"><div class="screen-lines"></div><div class="screen-grain"></div><div class="screen-sweep"></div><div class="screen-glitch"></div></div>
+        <div class="corner corner-tl"></div><div class="corner corner-tr"></div><div class="corner corner-bl"></div><div class="corner corner-br"></div>
+        <div class="map-stamp" aria-hidden="true"><span class="stamp-line"></span><span id="map-mode-label">АРХИВ ОБЪЕКТА</span><span>ПЛАН № 01</span></div>
+        <div class="map-controls"><button id="zoom-in" aria-label="Увеличить карту">+</button><button id="zoom-out" aria-label="Уменьшить карту">−</button><span></span><button id="reset-view" aria-label="Показать карту целиком" title="Карта целиком · 0"><svg><use href="#i-cross"/></svg></button></div>
+        <div class="zoom-indicator" id="zoom-indicator">100%</div>
+        <div class="map-tip"><span class="tip-desktop">ПЕРЕТАСКИВАЙ КАРТУ · КОЛЕСО — МАСШТАБ</span><span class="tip-mobile">ДВИГАЙ КАРТУ · НАЖМИ НА МЕТКУ</span></div>
+        <article class="map-popover" id="map-popover" aria-label="Карточка объекта" hidden><div class="popover-top"><span id="popover-category"></span><button id="close-popover" aria-label="Закрыть карточку"><svg><use href="#i-close"/></svg></button></div><div class="popover-symbol" id="popover-symbol"></div><h2 id="popover-title"></h2><p id="popover-description"></p><div class="popover-bottom"><span id="popover-tag"></span><span id="popover-code"></span></div></article>
+        <div class="empty-map" id="empty-map" hidden>Нет связи с изображением карты.<br>Обнови страницу, чтобы повторить загрузку.</div>
+      </div>
+      <footer class="map-footer"><span><span class="status-dot"></span> КАРТА ЗАГРУЖЕНА <span class="footer-slash">/</span> <span id="visible-count">10 МЕТОК</span></span><span class="grid-position" id="grid-position">СЕТКА — · —</span><span class="map-file" id="map-file">SS / BLUEPRINT–01</span></footer>
+    </section>
+    <footer class="page-footer"><span>СТРАЙКБОЛ В СТИЛИСТИКЕ ЗОНЫ</span><span>ЛОКАЦИИ — НАВЕДИ ИЛИ НАЖМИ <span class="footer-arrow">↗</span></span></footer>
+  </main>
+  <div class="mobile-scrim" id="mobile-scrim" hidden></div>
+  <div class="sr-only" id="announcement" aria-live="polite"></div>
+</body>
+</html>
