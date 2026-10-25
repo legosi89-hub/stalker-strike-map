@@ -23,7 +23,7 @@ jobs:
       - name: Prepare static website
         run: |
           mkdir -p _site
-          cp index.html styles.css app.js places.js .nojekyll _site/
+          cp index.html styles.css tabletop.css app.js places.js placement-store.js map-data.json scanner-notes.js scanner-places.js field-notes.js media-config.js scanner-signal.js .nojekyll _site/
           cp -R assets _site/assets
       - name: Upload website artifact
         uses: actions/upload-pages-artifact@v4
